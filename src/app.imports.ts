@@ -1,7 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypegooseModule } from 'nestjs-typegoose';
-import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 
 export const AppImports = [
   ScheduleModule.forRoot(),
@@ -14,16 +13,6 @@ export const AppImports = [
       useUnifiedTopology: true,
       family: 4,
       autoIndex: true,
-    }),
-    inject: [ConfigService],
-  }),
-  SendGridModule.forRootAsync({
-    imports: [ConfigModule],
-    useFactory: async (config: ConfigService) => ({
-      apiKey: config.get<string>(
-        'SENDGRID_API_KEY',
-        process.env.SENDGRID_API_KEY,
-      ),
     }),
     inject: [ConfigService],
   }),

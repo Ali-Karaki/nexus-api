@@ -1,25 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
+import * as postmark from 'postmark';
 
 @Injectable()
 export class EmailService {
-  public constructor(
-    @InjectSendGrid() private readonly sendgridClient: SendGridService,
-  ) {}
+  private postmarkClient: postmark.ServerClient;
 
-  async sendWelcomeMessage(to: string) {
-    return await this.sendgridClient.send({
-      to,
-      from: process.env.SENDGRID_FROM_EMAIL,
-      subject: `Welcome to ${process.env.APPLICATION_NAME}`,
-      text: 'Your account has been successfully created',
-      html: `<div>
+  constructor() {
+    this.postmarkClient = new postmark.ServerClient(
+      process.env.POSTMARK_API_KEY,
+    );
+  }
+
+  async sendWelcomeMessage(To: string) {
+    return await this.postmarkClient.sendEmail({
+      To,
+      From: process.env.POSTMARK_FROM_EMAIL,
+      Subject: `Welcome to ${process.env.APPLICATION_NAME}`,
+      TextBody: 'Your account has been successfully created',
+      HtmlBody: `<div>
             <strong>Welcome to ${process.env.APPLICATION_NAME}!</strong>
             <br />
             <br />
             <label>Your new account details are:</label>
             <ul>
-                <li>Access email: ${to}</li>
+                <li>Access email: ${To}</li>
             </ul>
             <br />
             <label>Regards</label>
@@ -27,14 +31,14 @@ export class EmailService {
     });
   }
 
-  async sendPasswordRecoveryMessage(to: string, newPassword: string) {
-    return await this.sendgridClient.send({
-      to,
-      from: process.env.SENDGRID_FROM_EMAIL,
-      subject: `Password Recovery`,
-      text: 'Your password has been recovered',
-      html: `<div>
-          <label>Hello ${to}, we are sending you your new password <strong>${newPassword}</strong>. 
+  async sendPasswordRecoveryMessage(To: string, newPassword: string) {
+    return await this.postmarkClient.sendEmail({
+      To,
+      From: process.env.POSTMARK_FROM_EMAIL,
+      Subject: `Password Recovery`,
+      TextBody: 'Your password has been recovered',
+      HtmlBody: `<div>
+          <label>Hello ${To}, we are sending you your new password <strong>${newPassword}</strong>. 
               Once you log in to the site, you can change it anytime you want.</label>
           <br />
           <br />
