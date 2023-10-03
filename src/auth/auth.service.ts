@@ -32,6 +32,9 @@ export class AuthService {
       registerUserDto;
 
     const userExists = await this.userModel.findOne({ email });
+    console.log("userExists ", userExists);
+    console.log("registerUserDto ", registerUserDto);
+    
 
     if (userExists) {
       throw new ConflictException('Email already in use');

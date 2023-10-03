@@ -28,7 +28,7 @@ export class AuthController {
     const { accessToken, email } =
       await this.authService.signUp(registerUserDto);
 
-    // await this.emailService.sendWelcomeMessage(email);
+    await this.emailService.sendWelcomeMessage(email);
 
     return { accessToken };
   }
