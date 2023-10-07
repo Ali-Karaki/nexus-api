@@ -16,6 +16,7 @@ import { AuthHelpers } from 'src/helpers/auth.helpers';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
+import { ResponseI } from 'src/models';
 
 @Injectable()
 export class AuthService {
@@ -24,18 +25,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(registerUserDto: RegisterUserDto): Promise<{
-    accessToken: string;
-    email: string;
-  }> {
-    const { email, password } =
-      registerUserDto;
+  async signUp(registerUserDto: RegisterUserDto): Promise<ResponseI> {
+    const { email, password } = registerUserDto;
 
     const userExists = await this.userModel.findOne({ email });
-    console.log("userExists ", userExists);
-    console.log("registerUserDto ", registerUserDto);
-    
-
     if (userExists) {
       throw new ConflictException('Email already in use');
     }
@@ -49,38 +42,41 @@ export class AuthService {
       const createdUser = new this.userModel(user);
       await createdUser.save();
 
-      const { accessToken } = await this.signIn({ email, password });
-
+      const accessToken = await this.signIn({ email, password });
       return {
-        accessToken,
-        email,
+        success: true,
+        message: {
+          accessToken,
+          email,
+        },
       };
     } catch (e) {
-      throw new InternalServerErrorException(e.message);
+      return {
+        success: false,
+        message: e.message,
+      };
     }
   }
 
-  async signIn(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
+  async signIn(loginUserDto: LoginUserDto): Promise<ResponseI> {
     const payload = await this.validateUserPassword(loginUserDto);
 
-    if (!payload) throw new UnauthorizedException('Invalid credentials');
+    if (!payload) return { success: false, message: 'Invalid credentials' };
 
     const accessToken = this.jwtService.sign(payload);
-
-    return { accessToken };
+    return { success: true, message: accessToken };
   }
 
-  async passwordRecovery(
-    passwordRecoveryDto: PasswordRecoveryDto,
-  ): Promise<{ newPassword: string }> {
+  async passwordRecovery(passwordRecoveryDto: PasswordRecoveryDto): Promise<ResponseI> {
     const user = await this.userModel.findOne({
       email: passwordRecoveryDto.email,
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `User with email ${passwordRecoveryDto.email} not found`,
-      );
+      return {
+        success: false,
+        message: `User with email ${passwordRecoveryDto.email} not found`,
+      };
     }
 
     const newPassword = AuthHelpers.getRandomPassword();
@@ -88,8 +84,7 @@ export class AuthService {
     user.salt = await bcrypt.genSalt();
     user.password = await AuthHelpers.hashPassword(newPassword, user.salt);
     await user.save();
-
-    return { newPassword };
+    return { success: true, message: 'New password sent to the email entered' };
   }
 
   private async validateUserPassword(

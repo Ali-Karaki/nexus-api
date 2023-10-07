@@ -11,50 +11,43 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { PasswordRecoveryDto } from './dto/password-recovery.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { ResponseI } from 'src/models';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
-    private emailService: EmailService,
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService,
   ) {}
 
   @Post('/signup')
   @ApiOperation({ summary: 'Register a new user' })
-  async signUp(
-    @Body(ValidationPipe) registerUserDto: RegisterUserDto,
-  ): Promise<{ accessToken: string }> {
-    const { accessToken, email } =
-      await this.authService.signUp(registerUserDto);
+  async signUp(@Body(ValidationPipe) registerUserDto: RegisterUserDto): Promise<ResponseI> {
+    const result = await this.authService.signUp(registerUserDto);
 
-    await this.emailService.sendWelcomeMessage(email);
+    if (result.success) {
+      await this.emailService.sendWelcomeMessage((result.message as any).email);
+    }
 
-    return { accessToken };
+    return result;
   }
 
   @Post('/signin')
   @ApiOperation({ summary: 'Login user with email and password' })
-  signIn(
-    @Body(ValidationPipe) loginUserDto: LoginUserDto,
-  ): Promise<{ accessToken: string }> {
-    return this.authService.signIn(loginUserDto);
+  async signIn(@Body(ValidationPipe) loginUserDto: LoginUserDto): Promise<ResponseI> {
+    return await this.authService.signIn(loginUserDto);
   }
 
   @Post('/password-recovery')
   @ApiOperation({ summary: 'Password recovery' })
-  async passwordRecovery(
-    @Body(ValidationPipe) passwordRecoveryDto: PasswordRecoveryDto,
-  ): Promise<{ message: string }> {
+  async passwordRecovery(@Body(ValidationPipe) passwordRecoveryDto: PasswordRecoveryDto): Promise<ResponseI> {
     const result = await this.authService.passwordRecovery(passwordRecoveryDto);
 
-    await this.emailService.sendPasswordRecoveryMessage(
-      passwordRecoveryDto.email,
-      result.newPassword,
-    );
+    if (result.success) {
+      await this.emailService.sendPasswordRecoveryMessage(passwordRecoveryDto.email, result.message as string);
+    }
 
-    return {
-      message: 'New password sent to the email entered',
-    };
+    return result;
   }
 }
