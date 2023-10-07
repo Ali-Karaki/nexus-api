@@ -90,8 +90,8 @@ export class Project {
 
   @IsArray()
   @IsString({ each: true })
-  @prop({ required: true, type: [String], default: [] })
-  watching: string[];
+  @prop({ ref: 'User', type: () => [mongoose.Schema.Types.ObjectId], required: false })
+  watching: Ref<User>[];
 
   @prop({ default: Date.now })
   createdAt: Date;
