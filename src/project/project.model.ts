@@ -63,12 +63,8 @@ export class Project {
   @prop({ required: true })
   geographicScope: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  @prop({ required: true, type: [String] })
-  participantsAge: string[];
+  @prop({ required: true, type: String })
+  participantsAge: string;
 
   @IsArray()
   @ArrayNotEmpty()

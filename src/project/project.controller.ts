@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
   Put,
+  Param,
   Query,
 } from '@nestjs/common';
 import { Project } from './project.model';
@@ -32,8 +33,8 @@ export class ProjectController {
     return await this.projectService.findAll(filter);
   }
 
-  @Get('/getProjectById')
-  async findOne(@Body('id') id: string): Promise<ResponseI> {
+  @Get('/getProjectById/:id')
+  async findOne(@Param('id') id: string): Promise<ResponseI> {
     return await this.projectService.findOne(id);
   }
 
