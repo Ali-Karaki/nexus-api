@@ -141,8 +141,8 @@ export class ProjectService {
 
   async delete(id: string): Promise<ResponseI> {
     try {
-      const result = await this.projectModel.findByIdAndRemove(id).exec();
-      if (!result) {
+      const res = await this.projectModel.findByIdAndRemove(id).exec();
+      if (!res) {
         return {
           success: false,
           message: 'Project not found!',
@@ -151,6 +151,48 @@ export class ProjectService {
       return {
         success: true,
         message: 'Project successfully deleted.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  async subProject(projectId: string, userId: string) {
+    try {
+      await this.projectModel.updateOne(
+        { _id: projectId },
+        {
+          $push: { watching: userId },
+        },
+      );
+
+      return {
+        success: true,
+        message: 'Did sub',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  async unsubProject(projectId: string, userId: string) {
+    try {
+      await this.projectModel.updateOne(
+        { _id: projectId },
+        {
+          $pull: { watching: userId },
+        },
+      );
+
+      return {
+        success: true,
+        message: 'Did sub',
       };
     } catch (error) {
       return {

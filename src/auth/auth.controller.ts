@@ -21,19 +21,19 @@ export class AuthController {
     private readonly emailService: EmailService,
   ) {}
 
-  @Post('/signup')
+  @Post('/signUp')
   @ApiOperation({ summary: 'Register a new user' })
   async signUp(@Body(ValidationPipe) registerUserDto: RegisterUserDto): Promise<ResponseI> {
-    const result = await this.authService.signUp(registerUserDto);
+    const res = await this.authService.signUp(registerUserDto);
 
-    if (result.success) {
-      await this.emailService.sendWelcomeMessage((result.message as any).email);
+    if (res.success) {
+      await this.emailService.sendWelcomeMessage((res.message as any).email);
     }
 
-    return result;
+    return res;
   }
 
-  @Post('/signin')
+  @Post('/signIn')
   @ApiOperation({ summary: 'Login user with email and password' })
   async signIn(@Body(ValidationPipe) loginUserDto: LoginUserDto): Promise<ResponseI> {
     return await this.authService.signIn(loginUserDto);
@@ -42,12 +42,12 @@ export class AuthController {
   @Post('/password-recovery')
   @ApiOperation({ summary: 'Password recovery' })
   async passwordRecovery(@Body(ValidationPipe) passwordRecoveryDto: PasswordRecoveryDto): Promise<ResponseI> {
-    const result = await this.authService.passwordRecovery(passwordRecoveryDto);
+    const res = await this.authService.passwordRecovery(passwordRecoveryDto);
 
-    if (result.success) {
-      await this.emailService.sendPasswordRecoveryMessage(passwordRecoveryDto.email, result.message as string);
+    if (res.success) {
+      await this.emailService.sendPasswordRecoveryMessage(passwordRecoveryDto.email, res.message as string);
     }
 
-    return result;
+    return res;
   }
 }

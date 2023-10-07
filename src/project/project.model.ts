@@ -92,6 +92,11 @@ export class Project {
   @prop({ required: true })
   startDate: Date;
 
+  @IsArray()
+  @IsString({ each: true })
+  @prop({ required: true, type: [String], default: [] })
+  watching: string[];
+
   @prop({ default: Date.now })
   createdAt: Date;
 

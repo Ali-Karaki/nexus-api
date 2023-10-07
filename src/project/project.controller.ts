@@ -49,4 +49,15 @@ export class ProjectController {
   async delete(@Body('id') id: string): Promise<ResponseI> {
     return await this.projectService.delete(id);
   }
+  
+  @Post('/subProject')
+  async sub(@Body('projectId') projectId: string, @Body("userId") userId): Promise<ResponseI> {
+    return await this.projectService.subProject(projectId, userId);
+  }
+  
+  @Post('/unsubProject')
+  async unsub(@Body('projectId') projectId: string, @Body("userId") userId): Promise<ResponseI> {
+    return await this.projectService.unsubProject(projectId, userId);
+  }
+
 }

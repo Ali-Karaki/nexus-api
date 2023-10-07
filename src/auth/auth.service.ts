@@ -17,12 +17,14 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { ResponseI } from 'src/models';
+import { UserService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
     private jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<ResponseI> {
@@ -42,13 +44,10 @@ export class AuthService {
       const createdUser = new this.userModel(user);
       await createdUser.save();
 
-      const accessToken = await this.signIn({ email, password });
+      const { message } = await this.signIn({ email, password });
       return {
         success: true,
-        message: {
-          accessToken,
-          email,
-        },
+        message,
       };
     } catch (e) {
       return {
@@ -63,11 +62,22 @@ export class AuthService {
 
     if (!payload) return { success: false, message: 'Invalid credentials' };
 
+    const { message: user } = await this.userService.findOneByEmail(
+      loginUserDto.email,
+    );
     const accessToken = this.jwtService.sign(payload);
-    return { success: true, message: accessToken };
+    return {
+      success: true,
+      message: {
+        accessToken,
+        user,
+      },
+    };
   }
 
-  async passwordRecovery(passwordRecoveryDto: PasswordRecoveryDto): Promise<ResponseI> {
+  async passwordRecovery(
+    passwordRecoveryDto: PasswordRecoveryDto,
+  ): Promise<ResponseI> {
     const user = await this.userModel.findOne({
       email: passwordRecoveryDto.email,
     });
