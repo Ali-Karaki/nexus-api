@@ -79,10 +79,32 @@ export class WorkshopService {
       if (!combinedQueries.length) {
         throw new Error('No valid search criteria provided.');
       }
+      const workshops = await this.workshopModel.aggregate([
+        { $match: { $and: combinedQueries } },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'creator',
+            foreignField: '_id',
+            as: 'creator',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'attendees',
+            foreignField: '_id',
+            as: 'attendees',
+          },
+        },
+        {
+          $project: {
+            creator: { $arrayElemAt: ['$creator.email', 0] },
+            attendees: '$attendees.email',
+          },
+        },
+      ]);
 
-      const workshops = await this.workshopModel
-        .find({ $and: combinedQueries })
-        .exec();
       return {
         success: true,
         message: workshops,
