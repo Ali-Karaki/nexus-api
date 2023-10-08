@@ -5,14 +5,14 @@ import { User } from 'src/users/user.model';
 
 export class Workshop {
   @prop({
-    ref: 'User',
+    ref: 'users',
     type: () => mongoose.Schema.Types.ObjectId,
     required: true,
   })
   creator: Ref<User>;
 
   @prop({
-    ref: 'User',
+    ref: 'users',
     type: () => [mongoose.Schema.Types.ObjectId],
     required: true,
   })

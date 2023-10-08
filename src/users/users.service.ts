@@ -10,11 +10,22 @@ export class UserService {
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
   ) {}
 
-  async findById(userId: string): Promise<User> {
-    return await this.userModel
-      .findById(userId)
-      .select('-password -salt -__v')
-      .exec();
+  async findById(userId: string): Promise<ResponseI> {
+    try {
+      const user = await this.userModel
+        .findById(userId)
+        .select('-password -salt -__v')
+        .exec();
+      return {
+        success: true,
+        message: user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 
   async findAll(): Promise<User[]> {

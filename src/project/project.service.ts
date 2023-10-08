@@ -3,12 +3,15 @@ import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { ResponseI } from 'src/models';
 import { Project } from './project.model';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectModel(Project)
     private readonly projectModel: ReturnModelType<typeof Project>,
+    @InjectModel(User)
+    private readonly userModel: ReturnModelType<typeof User>,
   ) {}
 
   async create(project: Project): Promise<ResponseI> {
@@ -169,6 +172,13 @@ export class ProjectService {
         },
       );
 
+      await this.userModel.updateOne(
+        { _id: userId },
+        {
+          $push: { subbed: projectId },
+        },
+      );
+
       return {
         success: true,
         message: 'Did sub',
@@ -187,6 +197,13 @@ export class ProjectService {
         { _id: projectId },
         {
           $pull: { watching: userId },
+        },
+      );
+
+      await this.userModel.updateOne(
+        { _id: userId },
+        {
+          $pull: { subbed: projectId },
         },
       );
 

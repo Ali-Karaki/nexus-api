@@ -13,13 +13,18 @@ export class WorkshopController {
   }
 
   @Get('/getAllWorkshops')
-  async findAll(@Query() filter: any): Promise<ResponseI> {
+  async findAll(): Promise<ResponseI> {
+    return await this.workshopService.findAll();
+  }
+
+  @Get('/getFilteredWorkshops')
+  async findFilteredWorkshops(@Query() filter: any): Promise<ResponseI> {
     for (const key in filter) {
       if (typeof filter[key] === 'string') {
         filter[key] = [filter[key]];
       }
     }
-    return await this.workshopService.findAll(filter);
+    return await this.workshopService.findAllSearch(filter);
   }
 
   @Get('/getWorkshopById/:id')

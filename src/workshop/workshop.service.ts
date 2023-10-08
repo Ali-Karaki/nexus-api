@@ -27,7 +27,22 @@ export class WorkshopService {
     }
   }
 
-  async findAll(filter: any): Promise<ResponseI> {
+  async findAll(): Promise<ResponseI> {
+    try {
+      const workshops = await this.workshopModel.find().exec();
+      return {
+        success: true,
+        message: workshops,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  async findAllSearch(filter: any): Promise<ResponseI> {
     try {
       const generalQueries = [];
       const specificQueries = [];
@@ -81,28 +96,6 @@ export class WorkshopService {
       }
       const workshops = await this.workshopModel.aggregate([
         { $match: { $and: combinedQueries } },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'creator',
-            foreignField: '_id',
-            as: 'creator',
-          },
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'attendees',
-            foreignField: '_id',
-            as: 'attendees',
-          },
-        },
-        {
-          $project: {
-            creator: { $arrayElemAt: ['$creator.email', 0] },
-            attendees: '$attendees.email',
-          },
-        },
       ]);
 
       return {
