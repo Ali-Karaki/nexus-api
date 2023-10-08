@@ -7,6 +7,6 @@ import { Workshop } from './workshop.model';
 @Module({
   imports: [TypegooseModule.forFeature([Workshop])],
   providers: [WorkshopService],
-  controllers: [WorkshopController]
+  controllers: [WorkshopController],
 })
 export class WorkshopModule {}

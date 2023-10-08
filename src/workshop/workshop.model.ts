@@ -1,29 +1,21 @@
 import { Ref, prop } from '@typegoose/typegoose';
-import {
-  ArrayMinSize,
-  ArrayNotEmpty,
-  IsArray,
-  IsDate,
-  IsEnum,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 import * as mongoose from 'mongoose';
 import { User } from 'src/users/user.model';
 
-enum WorkshopStatus {
-  ACTIVE = 'active',
-  ACTIVE_SEASONAL = 'active_seasonal',
-  INACTIVE = 'inactive',
-  COMPLETED = 'completed',
-  HIATUS = 'hiatus',
-  PENDING = 'pending',
-}
-
 export class Workshop {
-  @prop({ ref: 'User', type: () => mongoose.Schema.Types.ObjectId, required: true })
+  @prop({
+    ref: 'User',
+    type: () => mongoose.Schema.Types.ObjectId,
+    required: true,
+  })
   creator: Ref<User>;
 
-  @prop({ ref: 'User', type: () => [mongoose.Schema.Types.ObjectId], required: true })
+  @prop({
+    ref: 'User',
+    type: () => [mongoose.Schema.Types.ObjectId],
+    required: true,
+  })
   attendees: Ref<User>[];
 
   @IsString()

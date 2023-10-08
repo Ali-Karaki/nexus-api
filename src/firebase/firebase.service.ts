@@ -11,7 +11,9 @@ export class FirebaseService implements OnModuleInit {
   onModuleInit() {
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(firebaseConfig as admin.ServiceAccount),
+        credential: admin.credential.cert(
+          firebaseConfig as admin.ServiceAccount,
+        ),
       });
       this.firestore = admin.firestore();
       this.auth = admin.auth();

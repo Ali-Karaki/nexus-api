@@ -1,6 +1,6 @@
 import { prop } from '@typegoose/typegoose';
-import { IsBoolean, IsDate, IsString } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
+import { IsString } from 'class-validator';
 import * as mongoose from 'mongoose';
 
 export class User {

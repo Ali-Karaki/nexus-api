@@ -1,18 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Post,
-  Put,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ResponseI } from 'src/models';
 import { Workshop } from './workshop.model';
 import { WorkshopService } from './workshop.service';
-import { ResponseI } from 'src/models';
 
 @Controller('workshops')
 export class WorkshopController {

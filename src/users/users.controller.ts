@@ -4,8 +4,7 @@ import { UserService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-
-    constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('/getProjectById')
   async findOne(@Body('email') email: string): Promise<ResponseI> {

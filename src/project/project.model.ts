@@ -20,10 +20,18 @@ enum ProjectStatus {
 }
 
 export class Project {
-  @prop({ ref: 'User', type: () => mongoose.Schema.Types.ObjectId, required: true })
+  @prop({
+    ref: 'User',
+    type: () => mongoose.Schema.Types.ObjectId,
+    required: true,
+  })
   creator: Ref<User>;
 
-  @prop({ ref: 'User', type: () => [mongoose.Schema.Types.ObjectId], required: true })
+  @prop({
+    ref: 'User',
+    type: () => [mongoose.Schema.Types.ObjectId],
+    required: true,
+  })
   collaborators: Ref<User>[];
 
   @IsString()
@@ -90,7 +98,11 @@ export class Project {
 
   @IsArray()
   @IsString({ each: true })
-  @prop({ ref: 'User', type: () => [mongoose.Schema.Types.ObjectId], required: false })
+  @prop({
+    ref: 'User',
+    type: () => [mongoose.Schema.Types.ObjectId],
+    required: false,
+  })
   watching: Ref<User>[];
 
   @prop({ default: Date.now })

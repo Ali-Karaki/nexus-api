@@ -9,8 +9,16 @@ import { ChatModule } from './chat/chat.module';
 import { WorkshopModule } from './workshop/workshop.module';
 
 @Module({
-  imports: [...AppImports, UsersModule, AuthModule, EmailModule, ProjectModule, ChatModule, WorkshopModule],
-    controllers: [],
+  imports: [
+    ...AppImports,
+    UsersModule,
+    AuthModule,
+    EmailModule,
+    ProjectModule,
+    ChatModule,
+    WorkshopModule,
+  ],
+  controllers: [],
   providers: [EmailService],
 })
 export class AppModule {}

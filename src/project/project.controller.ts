@@ -1,18 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Post,
-  Put,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ResponseI } from 'src/models';
 import { Project } from './project.model';
 import { ProjectService } from './project.service';
-import { ResponseI } from 'src/models';
 
 @Controller('projects')
 export class ProjectController {
@@ -50,15 +39,20 @@ export class ProjectController {
   async delete(@Body('id') id: string): Promise<ResponseI> {
     return await this.projectService.delete(id);
   }
-  
+
   @Post('/subProject')
-  async sub(@Body('projectId') projectId: string, @Body("userId") userId): Promise<ResponseI> {
+  async sub(
+    @Body('projectId') projectId: string,
+    @Body('userId') userId,
+  ): Promise<ResponseI> {
     return await this.projectService.subProject(projectId, userId);
   }
-  
+
   @Post('/unsubProject')
-  async unsub(@Body('projectId') projectId: string, @Body("userId") userId): Promise<ResponseI> {
+  async unsub(
+    @Body('projectId') projectId: string,
+    @Body('userId') userId,
+  ): Promise<ResponseI> {
     return await this.projectService.unsubProject(projectId, userId);
   }
-
 }

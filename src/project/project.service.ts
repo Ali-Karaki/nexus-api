@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
-import { Project } from './project.model';
 import { ResponseI } from 'src/models';
+import { Project } from './project.model';
 
 @Injectable()
 export class ProjectService {
@@ -29,25 +29,25 @@ export class ProjectService {
 
   async findAll(filter: any): Promise<ResponseI> {
     try {
-      let generalQueries = [];
-      let specificQueries = [];
+      const generalQueries = [];
+      const specificQueries = [];
 
       if (filter.generalSearch) {
         const generalSearchString = filter.generalSearch;
         const regexFilter = new RegExp(generalSearchString, 'i');
 
-        for (let path in this.projectModel.schema.paths) {
+        for (const path in this.projectModel.schema.paths) {
           const pathType = this.projectModel.schema.paths[path];
 
           if (pathType.instance === 'String') {
-            let condition = {};
+            const condition = {};
             condition[path] = regexFilter;
             generalQueries.push(condition);
           } else if (
             pathType.instance === 'Array' &&
             (<any>pathType).caster.instance === 'String'
           ) {
-            let condition = {};
+            const condition = {};
             condition[path] = regexFilter;
             generalQueries.push(condition);
           }
@@ -56,7 +56,7 @@ export class ProjectService {
 
       for (const key in filter) {
         if (key !== 'generalSearch') {
-          let condition = {};
+          const condition = {};
           if (Array.isArray(filter[key])) {
             condition[key] = { $in: filter[key] };
           } else {

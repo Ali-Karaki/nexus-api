@@ -1,23 +1,16 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { InjectModel } from 'nestjs-typegoose';
-import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/user.model';
-import { PasswordRecoveryDto } from './dto/password-recovery.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { AuthHelpers } from 'src/helpers/auth.helpers';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { JwtPayloadDto } from './dto/jwt-payload.dto';
+import { ReturnModelType } from '@typegoose/typegoose';
+import * as bcrypt from 'bcryptjs';
+import { InjectModel } from 'nestjs-typegoose';
+import { AuthHelpers } from 'src/helpers/auth.helpers';
 import { ResponseI } from 'src/models';
+import { User } from 'src/users/user.model';
 import { UserService } from 'src/users/users.service';
+import { JwtPayloadDto } from './dto/jwt-payload.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { PasswordRecoveryDto } from './dto/password-recovery.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
