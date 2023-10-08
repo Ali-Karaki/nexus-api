@@ -11,6 +11,10 @@ export class User {
   email: string;
 
   @IsString()
+  @prop({ required: true })
+  fullName: string;
+
+  @IsString()
   @prop({ required: true, hidden: true })
   password: string;
 

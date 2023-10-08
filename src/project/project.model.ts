@@ -19,6 +19,12 @@ enum ProjectStatus {
   PENDING = 'pending',
 }
 
+enum ProjectLevel {
+  BEGINNER = 'beginner',
+  INTERMEDIATE = 'intermediate',
+  ADVANCED = 'advanced',
+}
+
 export class Project {
   @prop({
     ref: 'User',
@@ -60,6 +66,10 @@ export class Project {
   @prop({ required: true, enum: ProjectStatus })
   status: ProjectStatus;
 
+  @IsEnum(ProjectLevel)
+  @prop({ required: true, enum: ProjectLevel })
+  level: ProjectLevel;
+
   @IsArray()
   @ArrayNotEmpty()
   @ArrayMinSize(1)
@@ -99,7 +109,7 @@ export class Project {
   @IsArray()
   @IsString({ each: true })
   @prop({
-    ref: 'User',
+    ref: 'users',
     type: () => [mongoose.Schema.Types.ObjectId],
     required: false,
   })

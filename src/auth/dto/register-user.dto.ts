@@ -10,5 +10,15 @@ export class RegisterUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  fullName: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }

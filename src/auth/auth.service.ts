@@ -21,7 +21,7 @@ export class AuthService {
   ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<ResponseI> {
-    const { email, password } = registerUserDto;
+    const { email, fullName, password } = registerUserDto;
 
     const userExists = await this.userModel.findOne({ email });
     if (userExists) {
@@ -30,6 +30,7 @@ export class AuthService {
 
     const user = new User();
     user.email = email;
+    user.fullName = fullName;
     user.salt = await bcrypt.genSalt();
     user.password = await AuthHelpers.hashPassword(password, user.salt);
 

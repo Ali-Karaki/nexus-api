@@ -29,6 +29,11 @@ export class Workshop {
   @IsString()
   @prop({ required: true })
   host: string;
+
+  @IsString()
+  @prop({ required: true })
+  location: string;
+
   @IsString()
   @prop({ required: true })
   organizer: string;

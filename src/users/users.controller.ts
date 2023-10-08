@@ -10,4 +10,9 @@ export class UsersController {
   async findOne(@Param('id') id: string): Promise<ResponseI> {
     return await this.userService.findById(id);
   }
+
+  @Get('/getAllUsers')
+  async findAll(): Promise<ResponseI> {
+    return await this.userService.findAll();
+  }
 }

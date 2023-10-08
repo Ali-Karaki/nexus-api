@@ -28,8 +28,22 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userModel.find().select('-password -salt -__v').exec();
+  async findAll(): Promise<ResponseI> {
+    try {
+      const users = await this.userModel
+        .find()
+        .select('-password -salt -__v')
+        .exec();
+      return {
+        success: true,
+        message: users,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 
   async findOneByEmail(email: string): Promise<ResponseI> {
