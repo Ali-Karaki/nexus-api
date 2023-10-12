@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
-import { User } from './user.model';
 import { ResponseI } from 'src/models';
+import { User } from './user.model';
 
 @Injectable()
 export class UserService {
@@ -18,6 +18,21 @@ export class UserService {
         .exec();
       return {
         success: true,
+        message: user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
+  }
+
+  async findKeywords(id: string): Promise<ResponseI> {
+    try {
+      const user = await this.userModel.findById(id);
+      return {
+        success: false,
         message: user,
       };
     } catch (error) {

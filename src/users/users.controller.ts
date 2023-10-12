@@ -15,4 +15,9 @@ export class UsersController {
   async findAll(): Promise<ResponseI> {
     return await this.userService.findAll();
   }
+
+  @Get('/getKeywordsPerUser/:id')
+  async findKeywords(@Param('id') id: string): Promise<ResponseI> {
+    return await this.userService.findKeywords(id);
+  }
 }
